@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Product } from "../../app/models/product";
 import { WidthFull } from "@mui/icons-material";
+import agent from "../../app/api/agent";
 
 export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
@@ -11,8 +12,8 @@ export default function ProductDetails() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/products/${id}`)
-      .then(response => setProduct(response.data))
+    id && agent.Catalog.details(parseInt(id))
+      .then(response => setProduct(response))
       .catch(error => console.log(error))
       .finally(() => setLoading(false))
 
@@ -29,16 +30,16 @@ export default function ProductDetails() {
     <Grid container spacing={6}>
       <Grid item xs={6}>
 
-        <img src={product.pictureUrl} alt={product.name} style={{width:'100%'}}/>
-     
+        <img src={product.pictureUrl} alt={product.name} style={{ width: '100%' }} />
+
       </Grid>
 
       <Grid item xs={6}>
         <Typography variant="h3">
           {product.name}
         </Typography>
-        <Divider sx={{mb:2}}/>
-        <Typography variant="h4" color="secondary">${(product.price/100).toFixed(2)}</Typography>
+        <Divider sx={{ mb: 2 }} />
+        <Typography variant="h4" color="secondary">${(product.price / 100).toFixed(2)}</Typography>
         <TableContainer>
           <Table>
             <TableBody>
@@ -62,13 +63,13 @@ export default function ProductDetails() {
                 <TableCell>Quantity In Stock</TableCell>
                 <TableCell>{product.quantityInStock}</TableCell>
               </TableRow>
-              
+
             </TableBody>
           </Table>
         </TableContainer>
       </Grid>
-      
+
     </Grid>
-    
+
   )
 }
